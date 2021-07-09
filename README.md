@@ -9,10 +9,11 @@ The repository contains the codes of final projects of DEDA Summer Term 2021 cla
 * Each group should for the following repository and create the folder for their own final project.
 * One project = one Quantlet 
 * The code of each Quantlet needs to be accompanied by the Metainfo.txt file (it is just a textual configuration file that needs to contain specific info and **lies in the same folder as your Quantlet's main script**). We put _metainfo.txt in each project's folder, please fill out with the respective information and change the name to metainfo.txt (remove the underscore in the front)
-* This metainfo files are needed to create the README in the LvB style automatically. Please, do not try to create the README by yourself - it will be done automatically.
+* This metainfo files are needed to create the README in the LvB style automatically. ***Please, do not try to create the README by yourself - it will be done automatically.***
+* It would be very very nice if you can put a requirement.txt file with package names and their versions that you used in your research.
 * The main idea of these Quantlets is that anyone can reproduce your research.
 * Please make sure that the main script of your Quantlet has the same name as the one you specified in the Metainfo.txt file. (E.g. if your Quantlet Name is bitcoinVolatilityCheck - the main script will have a name bitcoinVolatilityCheck.py (.ipynb or .r etc. - depending on what language you use))
-
+* ***Please, do not change anything in the root folder or in the folders of other projects - only in the folder of your project.***
 
 
 
