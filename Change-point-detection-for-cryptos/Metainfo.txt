@@ -1,0 +1,19 @@
+Name of Quantlet: 'CPD'
+
+Published in: 'DEDA class of summer term 2021'
+
+Description: 'We perform a sequential non-parametric change point detection method in distribution for BTC and ETH, individually. Then, we apply the PCA on both time series and use the same method to find change points. A sensitivity analysis is conducted, showing that the number of estimated change points reduces as we decrease the starting period, as well as when we increase the ARL. '
+
+Keywords: 'change point detection, non-parametric, Cramer von Mises Test, change in distribution, PCA' 
+
+Author: 'Ratmir Miftachov'
+
+See also: 'optional: listing related Quantlets or Github code'
+
+Submitted:  'optional: e.g. 01. Jan 2019, John Doe'
+
+Datafile: 'optional: for your data sets - delete if not used'
+
+Input: 'optional'
+
+Output:  'optional'
