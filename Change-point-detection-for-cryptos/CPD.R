@@ -1,8 +1,5 @@
-##########CHANGE-POINT DETECTION STUFF
-library(ecp)
 library(cpm) # currently used
-library(LaplacesDemon)
-library(philentropy)
+
 # load data (BTC)
 data_raw <- read.csv("BTC.csv") #data frame
 data <- as.numeric(as.matrix(data_raw[,2]))
@@ -16,25 +13,33 @@ data <- data[-1] # align data with returns
 
 
 
-#load ETH
+# load ETH
 data_raw_eth <- read.csv("ETH.csv") #data frame
 data_eth <- as.numeric(as.matrix(data_raw_eth[,2]))
 data_eth[which(is.na(data_eth)==TRUE)] <- data_eth[(which(is.na(data_eth)==TRUE)-2)]
 returns_eth <- matrix(diff(log(data_eth)))
 data_eth <- data_eth[-1] # align data with returns
-#plot(returns_eth, type="l")
+
+
+# load LTC
+data_raw_ltc <- read.csv("LTC.csv") #data frame
+data_ltc <- as.numeric(as.matrix(data_raw_ltc[,2]))
+data_ltc[which(is.na(data_ltc)==TRUE)] <- data_ltc[(which(is.na(data_ltc)==TRUE)-2)]
+returns_ltc <- matrix(diff(log(data_ltc)))
+data_ltc <- data_ltc[-1] # align data with returns
 
 
 
-# cuts
 
-
+# cut the data for presentation
 dates <- dates[-(1:314)]
 returns <- returns[-(1:314)]
 returns_eth <- returns_eth[-(1:314)]
 data <- data[-(1:314)]
 data_eth <- data_eth[-(1:314)]
 
+data_ltc <- data_ltc[-(1:314)]
+##################################################################################
 
 #PCA (approach 1)
 # Step1: Standardisation (mean=0, sd=1)
@@ -48,41 +53,20 @@ ZZ <- eigen(cov)
 eig_vec <- ZZ$vectors
 comp <- X%*%eig_vec
 comp1 <- comp[,1]
-
 plot(comp1, type="l")
-
 # first component explains 0.85% of variance
 
 
+##################################################################################
 
 
+#Step1: Estimate change points in distribution
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#Step1: Estimate change points in distribution.
 # BTC
 test2 <- processStream(returns, cpmType = "Cramer-von-Mises", ARL0 = 1000, startup = 50)
 # ETH
-test2_eth <- processStream(returns_eth, cpmType = "Cramer-von-Mises", ARL0 = 1000, startup = 50)
+test2_eth <- processStream(returns_eth, cpmType = "Cramer-von-Mises", ARL0 = 100, startup = 30 ) #50 war in aktuellster Präsi. An dieser Stelle soll
+# eine Sensitivitätsanalyse gemacht werden. D.h. startup=10,20,50,100,200,500 und Ergebnisse gescheit in keynote rein tun. arl=1000
 
 
 #offline for BTC keynote (explanation purpose):
@@ -92,6 +76,7 @@ d_offline <- test2_offline_eth$Ds
 plot(d_offline, type="l")
 abline(h=test2_offline_eth$threshold, col="blue", lty=2)
 abline(v=test2_offline_eth$changePoint, lty=2)
+
 
 
 
@@ -117,12 +102,6 @@ png("/Users/ratmir/Documents/R/ttttt.png", width = 900, height = 600, bg = "tran
 
 
 
-
-
-
-
-
-
 # plot the CPs on the BTC and ETH
 par( mgp=c(2.2,0.6,0), mfrow=c(2,1))
 plot(dates, data, type="l", lwd=3, main="BTC-USD", xlab="date", ylab="price", cex.lab=1.5)
@@ -134,49 +113,14 @@ abline(v = dates[c(test2_eth$changePoints)], lty = 2, lwd=2)
 dev.off()
 
 
-
-
-
-
-
-
-
-
-
-
-#plot(data_eth, type="l")
-#abline(v = test1_eth$changePoint, lty = 2, col="red")
-#abline(v = test2_eth$changePoint, lty = 2, col="blue")
-#abline(v = test3_eth$changePoint, lty = 4, col="green")
-
-
-#Step2: Split the data
-CPS <- as.numeric(test2$changePoint) # vector containing the change points.
-
-result <- list()
-result[[1]] <- rep(1, CPS[1])
-for ( i in 2:length(CPS)){
-entry <- rep(i, CPS[i]-CPS[i-1])
-result[[i]] <- entry
-}
-last_seg <- length(CPS)+1
-result[[last_seg]] <- rep(last_seg, length(data) - CPS[length(CPS)])
-splits <- split(data, f=unlist(result))
-
-
-# Show me the test statistic over time:
-
-#OFFLINE
-#cp <- detectChangePointBatch(data, cpmType = "Student", alpha = 0.05) 
-
-#test2 <- processStream(returns, cpmType = "Cramer-von-Mises", ARL0 = 1000, startup = 100)
+### Sequential and manual 
 
 #vectors to hold the result
 detectiontimes <- numeric()
 changepoints <- numeric()
 
-#use a Lepage CPM
-cpm <- makeChangePointModel(cpmType="Cramer-von-Mises", ARL0=1000, startup = 50)
+
+cpm <- makeChangePointModel(cpmType="Cramer-von-Mises", ARL0=1000, startup = 100)
 
 dd <- list()
 i <- 0
@@ -212,12 +156,6 @@ while (i < length(returns_eth)) {
 
 
 
-# dd[[339]] geht bis tag 339
-# dd[[372]] geht bis 372(DT2) - 203(CP1) = 169, also tag 339 + 169 = 508
-
-# such a plot would be not correct; better: show how you obtained the first three change points.
-#a <- c(dd[[339]], dd[[372]], dd[[830]], dd[[1080]], dd[[1234]], dd[[1662]], dd[[1683]], dd[[1813]])
-#plot(a, type="l")
 
 png("/Users/ratmir/Documents/R/tt.png", width = 900, height = 600, bg = "transparent")
 
@@ -275,42 +213,106 @@ axis(1, at = dates[detectiontimes[1:5]], labels=FALSE)
 dev.off()
 
 
+png("/Users/ratmir/Documents/R/ltc.png", width = 900, height = 600, bg = "transparent")
+
+plot(dates, data_ltc, type="l", lwd=3, main="LTC-USD", xlab="date", ylab="price", cex.lab=1.5)
+abline(v = dates[200], lty = 2, lwd=2)
+abline(v = dates[1290], lty = 2, lwd=2)
+abline(v = dates[800], lty = 1, lwd=2)
+
+dev.off()
 
 
 
 
 
+S <- seq(from=20, to=500, by=10)
+ARL <- c(100, 500, 1000)
+change_points <- numeric()
+array_change_points <- array(list(), length(ARL))
+
+for (j in 1:length(ARL)){
+# Sensitivity Analysis
+for (i in 1:length(S)){
+  
+print(i)
+test <- processStream(returns, cpmType = "Cramer-von-Mises", ARL0 = ARL[j], startup = S[i]) 
+
+change_points[i] <- length(test$changePoints)
+}
+array_change_points[[j]] <- change_points 
+
+
+}
+
+#save(array_change_points_ETH , file = "ETH_CP.RData")
+#save(array_change_points_BTC , file = "BTC_CP.RData")
+
+load("ETH_CP.RData")
+load("BTC_CP.RData")
+
+# Sensitivity plot
+png("/Users/ratmir/Documents/R/sensit.png", width = 900, height = 600, bg = "transparent")
+
+par(mgp=c(2, 0.6, 0), mfrow=c(2,1))
+plot(S , array_change_points_ETH[[1]], type="l", lwd=3, main="ETH", xlab="S", ylab="Number of CP", cex.lab=1.5)
+lines(x=S, y=array_change_points_ETH[[2]], lwd=3, col="orange")
+lines(x=S, array_change_points_ETH[[3]], lwd=3, col="blue")
+
+plot(S , array_change_points_BTC[[1]], type="l", lwd=3, main="BTC", xlab="S", ylab="Number of CP", cex.lab=1.5)
+lines(x=S, y=array_change_points_BTC[[2]], lwd=3, col="orange")
+lines(x=S, array_change_points_BTC[[3]], lwd=3, col="blue")
+
+dev.off()
 
 
 
-# kernel density estimation using gaussian kernel
-den1 <- density(returns1)
-den2 <- density(returns2)
-den3 <- density(returns3)
-den4 <- density(returns4)
-den5 <- density(returns5)
-den6 <- density(returns6)
-den7 <- density(returns7)
-den8 <- density(returns8)
-den9 <- density(returns9)
+
+
+### The subsequent code can be used to group TS segments by KL divergence after estimating the NW Estimator
+
+#Split the data
+#CPS <- as.numeric(test2$changePoint) # vector containing the change points.
+
+#result <- list()
+#result[[1]] <- rep(1, CPS[1])
+#for ( i in 2:length(CPS)){
+#  entry <- rep(i, CPS[i]-CPS[i-1])
+#  result[[i]] <- entry
+#}
+#last_seg <- length(CPS)+1
+#result[[last_seg]] <- rep(last_seg, length(data) - CPS[length(CPS)])
+#splits <- split(data, f=unlist(result))
 
 
 
-plot(den1$y,type="l")
-lines(den2$y,type="l", col="blue")
-lines(den3$y,type="l", col="red")
-lines(den4$y,type="l", col="green")
-lines(den5$y,type="l", col="yellow")
-lines(den6$y,type="l", col="magenta")
-lines(den7$y,type="l", col="brown")
-lines(den8$y,type="l", col="cyan")
-lines(den9$y,type="l", col="deeppink")
-
-
-# KLD of all kombinations
-JSD(rbind(den1$y, den2$y, den3$y, den4$y, den5$y, den6$y, den7$y, den8$y, den9$y))
-
-# eyeballing: 1 alone; 2&3&8; 3&5%8; 
+# # kernel density estimation using gaussian kernel
+# den1 <- density(returns1)
+# den2 <- density(returns2)
+# den3 <- density(returns3)
+# den4 <- density(returns4)
+# den5 <- density(returns5)
+# den6 <- density(returns6)
+# den7 <- density(returns7)
+# den8 <- density(returns8)
+# den9 <- density(returns9)
+# 
+# 
+# 
+# plot(den1$y,type="l")
+# lines(den2$y,type="l", col="blue")
+# lines(den3$y,type="l", col="red")
+# lines(den4$y,type="l", col="green")
+# lines(den5$y,type="l", col="yellow")
+# lines(den6$y,type="l", col="magenta")
+# lines(den7$y,type="l", col="brown")
+# lines(den8$y,type="l", col="cyan")
+# lines(den9$y,type="l", col="deeppink")
+# 
+# 
+# # KLD of all kombinations
+# JSD(rbind(den1$y, den2$y, den3$y, den4$y, den5$y, den6$y, den7$y, den8$y, den9$y))
+# 
 
 
 
