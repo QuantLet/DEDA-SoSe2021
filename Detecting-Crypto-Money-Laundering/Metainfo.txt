@@ -8,12 +8,6 @@ Keywords: 'Bitcoin, Elliptic, AML, illicit activities, Cryptocurrency, Random Fo
 
 Author: 'Muhammad Najati Al-imam'
 
-See also: 'optional: listing related Quantlets or Github code'
+Submitted:  '12. Jul 2021, Muhammad Najati Al-imam'
 
-Submitted:  'optional: e.g. 01. Jan 2019, John Doe'
-
-Datafile: 'optional: for your data sets - delete if not used'
-
-Input: 'optional'
-
-Output:  'optional'
+Datafile: 'The source of data can be found in the notebook'
