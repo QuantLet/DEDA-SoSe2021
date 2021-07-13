@@ -1,0 +1,9 @@
+Name of Quantlet: Cryptocurrencies_Sentiment_Correlation_Analysis
+
+Published in: DEDA-SoSe2021
+
+Description: Benchmarking the strength of correlation between sentiment in the market and cryptocurrency performance by conducting a sentiment analysis using Twitter data 
+
+Keywords: sentiment analysis, twitter, cryptocurrency, crosscorrelation, bitcoin
+
+Author: Makar Evdokimov, Selen Seltuk
