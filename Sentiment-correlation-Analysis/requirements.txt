@@ -1,0 +1,8 @@
+matplotlib==3.3.4
+numpy==1.17.0
+pandas==1.1.5
+vadersentiment==3.3.0
+wordcloud==1.8.1
+twint==2.1.21
+nest-asyncio==1.5.1
+python-binance==1.0.12
