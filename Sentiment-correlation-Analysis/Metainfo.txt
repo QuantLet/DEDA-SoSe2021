@@ -7,3 +7,5 @@ Description: Benchmarking the strength of correlation between sentiment in the m
 Keywords: sentiment analysis, twitter, cryptocurrency, crosscorrelation, bitcoin
 
 Author: Makar Evdokimov, Selen Seltuk
+
+Datafile: https://drive.google.com/drive/folders/1z-nmjEZJMfgC4r6-Gbf5YQrzadVJ4vm2?usp=sharing
