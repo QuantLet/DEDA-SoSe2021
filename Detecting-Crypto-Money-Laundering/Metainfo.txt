@@ -1,0 +1,19 @@
+Name of Quantlet: 'AMLBitcoin'
+
+Published in: 'Quantlet - DEDA SoSe 2021'
+
+Description: 'Working on the Elliptic labeled Bitcoin transaction dataset, an attempt is made to detect illicit activities using different Machine Learning models'
+
+Keywords: 'Bitcoin, Elliptic, AML, illicit activities, Cryptocurrency, Random Forest, XGBoost, Neural Network ' 
+
+Author: 'Muhammad Najati Al-imam'
+
+See also: 'optional: listing related Quantlets or Github code'
+
+Submitted:  'optional: e.g. 01. Jan 2019, John Doe'
+
+Datafile: 'optional: for your data sets - delete if not used'
+
+Input: 'optional'
+
+Output:  'optional'
