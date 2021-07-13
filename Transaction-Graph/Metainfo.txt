@@ -1,0 +1,11 @@
+Name of Quantlet: 'Understanding_Transaction_Graphs'
+
+Published in: '13.07.2021'
+
+Description: 'Transaction graph analysis and temporal community detection for cryptocurriencies'
+
+Keywords: 'Transaction graph, crypto, network, temporal louvain, stable community, communities, bitcoin, dogecoin, litecoin, crytocurrencies' 
+
+Author: 'Rebecca Staniscia Koprik and Maria-Sophie Liess'
+
+See also: 'https://github.com/VeryLargeGraph'
