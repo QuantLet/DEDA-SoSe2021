@@ -1,1 +1,0 @@
-# deda_punks
